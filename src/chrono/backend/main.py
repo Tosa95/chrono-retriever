@@ -7,6 +7,7 @@ from chrono.backend.mutations import mutation
 from chrono.backend.queries import query
 from chrono.backend.types.timestamp import timestamp
 import chrono.backend.queries.windows_states_resolver
+import chrono.backend.queries.activity_stats_resolver
 import chrono.backend.mutations.windows_state_resolver
 
 with open(os.path.join(os.path.dirname(__file__), "schema.graphql"), "rt") as schema_file:

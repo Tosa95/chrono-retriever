@@ -3,27 +3,16 @@ from copy import deepcopy
 from datetime import datetime
 
 from chrono.backend.queries import query
-from chrono.backend.singletons.mongo import get_mongo_client
-from chrono.model.windows_state import WindowsState
+from chrono.backend.singletons.db_connector import get_db_connector
 
-
-def id_to_str(item: dict):
-    item = deepcopy(item)
-    item["id"] = str(item["_id"])
-    del item["_id"]
-    return item
 
 @query.field("windows_states")
 def resolve_window_states(obj, info, from_timestamp: datetime, to_timestamp: datetime):
-    mongo_client = get_mongo_client()
-    items = [id_to_str(i) for i in mongo_client["chrono"]["windows_states"].find({
-        "timestamp": {
-            "$gte": from_timestamp,
-            "$lt": to_timestamp
-        }
-    })]
+    db_connector = get_db_connector()
 
-    return [WindowsState(**i).dict() for i in items]
+    items = db_connector.get_windows_states(from_timestamp, to_timestamp)
+
+    return [i.dict() for i in items]
 
 # Example
 # {

@@ -1,27 +1,30 @@
 import datetime
 import json
 from copy import deepcopy
+from datetime import timezone
 from uuid import uuid4
 
 from chrono.backend.mutations import mutation
+from chrono.backend.singletons.db_connector import get_db_connector
 from chrono.backend.singletons.mongo import get_mongo_client
 from chrono.model.windows_state import WindowsState
 
 
 @mutation.field("windows_state")
 def resolve_window_state(obj, info, state):
-    state = WindowsState(**state, timestamp=datetime.datetime.now())
+    state = WindowsState(**state)
+    db_connector = get_db_connector()
 
-    mongo_client = get_mongo_client()
+    res = db_connector.upsert_windows_state(state)
 
-    insert_id = mongo_client["chrono"]["windows_states"].insert_one(state.dict()).inserted_id
+    previous = db_connector.get_previous_windows_state(state)
 
-    print(insert_id)
+    if previous is not None:
+        previous.time_delta = (state.timestamp - previous.timestamp.astimezone(timezone.utc)).total_seconds()
+        db_connector.upsert_windows_state(previous)
 
-    res = mongo_client["chrono"]["windows_states"].find_one({"_id": insert_id})
-    res["id"] = str(res["_id"])
 
-    return res
+    return res.dict()
 
 # Example
 # mutation {

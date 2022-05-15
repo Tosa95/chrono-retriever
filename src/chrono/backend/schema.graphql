@@ -1,6 +1,8 @@
 type Query {
     node(id: ID!): Node!
     windows_states(from_timestamp: Timestamp!, to_timestamp: Timestamp!): [WindowsState]!
+    activity_stats(from_timestamp: Timestamp!, to_timestamp: Timestamp!,
+        activity_filter: ActivityRegexFilterInput!): ActivityStats!
 }
 
 type Mutation {
@@ -28,8 +30,17 @@ type WindowsState implements Node {
     id: ID!
     timestamp: Timestamp!
     hostname: String!
+    username: String
     active_window: WindowInfo
     windows: [WindowInfo]!
+    time_delta: Float
+}
+
+type ActivityStats {
+    total_time: Float!
+    total_time_human: String!
+    from_timestamp: Timestamp!
+    to_timestamp: Timestamp!
 }
 
 input WindowInfoInput {
@@ -45,7 +56,20 @@ input WindowInfoInput {
 
 
 input WindowsStateInput {
+    timestamp: Timestamp!
     hostname: String!
+    username: String
     active_window: WindowInfoInput
     windows: [WindowInfoInput]!
+}
+
+input ActivityRegexFilterInput {
+    hostname_re: String
+    username_re: String
+    process_name_re: String
+    project_re: String
+    name_re: String
+    file_re: String
+    branch_re: String
+    url_re: String
 }

@@ -13,6 +13,7 @@ ariadne = "^0.15"
 uvicorn = "*"
 pymongo = "^4"
 python-graphql-client = "^0.4"
+fastapi = "*"
 
 [tool.poetry.dev-dependencies]
 

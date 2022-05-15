@@ -10,5 +10,7 @@ class WindowsState(BaseModel):
     id: Optional[str] = None
     timestamp: Optional[datetime] = None
     hostname: str
+    username: Optional[str]
     active_window: Optional[WindowInfo]
     windows: List[WindowInfo]
+    time_delta: Optional[float]

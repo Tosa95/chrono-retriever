@@ -1,7 +1,10 @@
+import os
 from typing import Optional
 
 import pygetwindow as gw
 import socket
+
+from datetime import datetime, tzinfo, timezone
 from pygetwindow import BaseWindow
 
 from src.chrono.model.window_info import WindowInfo, BaseWindowInfo
@@ -32,6 +35,8 @@ class WindowsStateRetriever:
     def retrieve_windows_state(self) -> WindowsState:
         return WindowsState(
             hostname=socket.gethostname(),
+            username=os.getlogin(),
             active_window=self._prepare_window(gw.getActiveWindow()),
-            windows=[self._prepare_window(w) for w in gw.getAllWindows()]
+            windows=[self._prepare_window(w) for w in gw.getAllWindows()],
+            timestamp=datetime.now(tz=timezone.utc)
         )
