@@ -2,7 +2,7 @@ import re
 from abc import abstractmethod, ABC
 from typing import List
 
-from src.chrono.model.window_info import WindowInfo, BrowserWindowInfo, IdeWindowInfo
+from chrono.model.window_info import WindowInfo, BrowserWindowInfo, IdeWindowInfo
 
 
 class BaseWindowSpecializer(ABC):

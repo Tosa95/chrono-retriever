@@ -7,9 +7,9 @@ import socket
 from datetime import datetime, tzinfo, timezone
 from pygetwindow import BaseWindow
 
-from src.chrono.model.window_info import WindowInfo, BaseWindowInfo
-from src.chrono.model.windows_state import WindowsState
-from src.chrono.retrievers.window_specializer import BaseWindowSpecializer
+from chrono.model.window_info import WindowInfo, BaseWindowInfo
+from chrono.model.windows_state import WindowsState
+from chrono.retrievers.window_specializer import BaseWindowSpecializer
 
 
 class WindowsStateRetriever:

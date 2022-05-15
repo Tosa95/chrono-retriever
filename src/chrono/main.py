@@ -24,8 +24,8 @@ query = """
 """
 
 SEND_EVERY = 30.0
-# ENDPOINT = "http://tosahomemilan.ddns.net:8000"
-ENDPOINT = "http://localhost:8000"
+ENDPOINT = "http://tosahomemilan.ddns.net:8000"
+# ENDPOINT = "http://localhost:8000"
 
 if __name__ == "__main__":
     client = GraphqlClient(endpoint=ENDPOINT)
@@ -35,18 +35,23 @@ if __name__ == "__main__":
     last_sent: Optional[datetime] = None
 
     while True:
-        state = retriever.retrieve_windows_state()
+        try:
+            state = retriever.retrieve_windows_state()
 
-        if state.active_window != prev_active or last_sent is None or (
-                datetime.now() - last_sent).total_seconds() > SEND_EVERY:
-            data = state.dict(exclude_unset=True)
-            data = to_jsonable_dict(data)
-            variables = {"state": data}
-            # pprint.pprint(data)
+            if state.active_window != prev_active or last_sent is None or (
+                    datetime.now() - last_sent).total_seconds() > SEND_EVERY:
+                data = state.dict(exclude_none=True)
+                data = to_jsonable_dict(data)
+                variables = {"state": data}
+                # pprint.pprint(data)
 
-            res = client.execute(query=query, variables=variables)
-            pprint.pprint(state.active_window)
-            last_sent = datetime.now()
+                res = client.execute(query=query, variables=variables)
+                print(res)
+                pprint.pprint(state.active_window)
+                last_sent = datetime.now()
 
-        prev_active = state.active_window
+            prev_active = state.active_window
+        except Exception as e:
+            print(e)
+
         time.sleep(0.5)

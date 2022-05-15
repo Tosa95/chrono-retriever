@@ -78,8 +78,8 @@ class MongoDbConnector(DbConnector):
                                              activity_filter: ActivityRegexFilter) -> Iterable[WindowsState]:
 
         filter = self.get_timestamp_filter(from_timestamp, to_timestamp)
-        self.add_re_filter(filter, "active_window.hostname", activity_filter.hostname_re)
-        self.add_re_filter(filter, "active_window.username", activity_filter.username_re)
+        self.add_re_filter(filter, "hostname", activity_filter.hostname_re)
+        self.add_re_filter(filter, "username", activity_filter.username_re)
         self.add_re_filter(filter, "active_window.name", activity_filter.name_re)
         self.add_re_filter(filter, "active_window.process_name", activity_filter.process_name_re)
         self.add_re_filter(filter, "active_window.url", activity_filter.url_re)
