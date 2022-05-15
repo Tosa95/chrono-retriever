@@ -18,6 +18,7 @@ type  WindowInfo {
     url: String
     project: String
     file: String
+    branch: String
     type_: String!
 }
 
@@ -38,6 +39,7 @@ input WindowInfoInput {
     url: String
     project: String
     file: String
+    branch: String
     type_: String!
 }
 

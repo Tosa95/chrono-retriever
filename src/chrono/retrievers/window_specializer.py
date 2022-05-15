@@ -61,10 +61,15 @@ class IdeaWindowSpecializer(BaseWindowSpecializer):
     def specialize(self, window_info: WindowInfo) -> WindowInfo:
         name_split = window_info.name.split(self._separator)
 
+        data = window_info.dict()
+        del data["type_"]
+
         if len(name_split) == 2:
-            data = window_info.dict()
-            del data["type_"]
             return IdeWindowInfo(**data, project=name_split[0].strip(), file=name_split[1].strip())
+        elif len(name_split) == 3:
+            return IdeWindowInfo(**data, project=name_split[0].strip(),
+                                 branch=name_split[1].strip().replace("[", "").replace("]", ""),
+                                 file=name_split[2].strip())
         else:
             return window_info
 

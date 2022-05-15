@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 from typing_extensions import Annotated, Literal
 
 from pydantic import BaseModel, Field
@@ -19,6 +19,7 @@ class BrowserWindowInfo(BaseWindowInfo):
 class IdeWindowInfo(BaseWindowInfo):
     project: str
     file: str
+    branch: Optional[str]
     type_: Literal["IdeWindowInfo"] = "IdeWindowInfo"
 
 

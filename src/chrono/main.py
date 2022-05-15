@@ -1,5 +1,7 @@
 import pprint
 import time
+from datetime import datetime
+from typing import Optional
 
 from chrono.retrievers.window_specializer import ALL_SPECIALIZERS
 from chrono.retrievers.windows_state_retriever import WindowsStateRetriever
@@ -18,16 +20,20 @@ query = """
     }
 """
 
+SEND_EVERY = 30.0
+ENDPOINT = "http://tosahomemilan.ddns.net:8000"
+
 if __name__ == "__main__":
-    client = GraphqlClient(endpoint="http://192.168.1.78:8000")
+    client = GraphqlClient(endpoint=ENDPOINT)
     retriever = WindowsStateRetriever(ALL_SPECIALIZERS)
 
     prev_active = None
+    last_sent: Optional[datetime] = None
 
     while True:
         state = retriever.retrieve_windows_state()
 
-        if state.active_window != prev_active:
+        if state.active_window != prev_active or last_sent is None or (datetime.now() - last_sent).total_seconds() > SEND_EVERY :
             data = state.dict(exclude_unset=True)
             variables = {"state": data}
             # pprint.pprint(data)
@@ -35,6 +41,7 @@ if __name__ == "__main__":
             res = client.execute(query=query, variables=variables)
             print(res)
             pprint.pprint(state.active_window)
+            last_sent = datetime.now()
 
         prev_active = state.active_window
         time.sleep(0.5)
