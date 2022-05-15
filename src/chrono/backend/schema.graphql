@@ -1,0 +1,49 @@
+type Query {
+    node(id: ID!): Node!
+    windows_states(from_timestamp: Timestamp!, to_timestamp: Timestamp!): [WindowsState]!
+}
+
+type Mutation {
+    windows_state(state: WindowsStateInput): WindowsState!
+}
+
+interface Node {
+    id: ID
+}
+
+type  WindowInfo {
+    name: String!
+    process_name: String!
+    process_id: Int!
+    url: String
+    project: String
+    file: String
+    type_: String!
+}
+
+scalar Timestamp
+
+type WindowsState implements Node {
+    id: ID!
+    timestamp: Timestamp!
+    hostname: String!
+    active_window: WindowInfo
+    windows: [WindowInfo]!
+}
+
+input WindowInfoInput {
+    name: String!
+    process_name: String!
+    process_id: Int!
+    url: String
+    project: String
+    file: String
+    type_: String!
+}
+
+
+input WindowsStateInput {
+    hostname: String!
+    active_window: WindowInfoInput
+    windows: [WindowInfoInput]!
+}

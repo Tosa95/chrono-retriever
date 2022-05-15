@@ -1,0 +1,42 @@
+import pprint
+from copy import deepcopy
+from datetime import datetime
+
+from chrono.backend.queries import query
+from chrono.backend.singletons.mongo import get_mongo_client
+from chrono.model.windows_state import WindowsState
+
+
+def id_to_str(item: dict):
+    item = deepcopy(item)
+    item["id"] = str(item["_id"])
+    del item["_id"]
+    return item
+
+@query.field("windows_states")
+def resolve_window_states(obj, info, from_timestamp: datetime, to_timestamp: datetime):
+    mongo_client = get_mongo_client()
+    items = [id_to_str(i) for i in mongo_client["chrono"]["windows_states"].find({
+        "timestamp": {
+            "$gte": from_timestamp,
+            "$lt": to_timestamp
+        }
+    })]
+
+    return [WindowsState(**i).dict() for i in items]
+
+# Example
+# {
+#   windows_states(from_timestamp:"2022-05-14T23:08:00+02:00", to_timestamp: "2022-05-15T00:00:00") {
+#     active_window {
+#       name
+#       process_name
+#       url
+#       type_
+#       project
+#       file
+#     }
+#     timestamp
+#     hostname
+#   }
+# }
