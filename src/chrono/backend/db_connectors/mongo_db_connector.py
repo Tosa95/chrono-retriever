@@ -72,7 +72,7 @@ class MongoDbConnector(DbConnector):
 
     def add_re_filter(self, filter: dict, field_name: str, re_filter: Optional[str]):
         if re_filter is not None:
-            filter[field_name] = {"$regex": re_filter}
+            filter[field_name] = {"$regex": re_filter, "$options": "i"}
 
     def get_windows_states_w_activity_filter(self, from_timestamp: datetime, to_timestamp: datetime,
                                              activity_filter: ActivityRegexFilter) -> Iterable[WindowsState]:
