@@ -3,6 +3,7 @@ type Query {
     windows_states(from_timestamp: Timestamp!, to_timestamp: Timestamp!): [WindowsState]!
     activity_stats(from_timestamp: Timestamp!, to_timestamp: Timestamp!,
         activity_filter: ActivityRegexFilterInput!): ActivityStats!
+    aggregate(from_timestamp: Timestamp!, to_timestamp: Timestamp!, feature_extractor: String!): AggregationResult!
 }
 
 type Mutation {
@@ -42,6 +43,8 @@ type ActivityStats {
     from_timestamp: Timestamp!
     to_timestamp: Timestamp!
 }
+
+scalar AggregationResult
 
 input WindowInfoInput {
     name: String!

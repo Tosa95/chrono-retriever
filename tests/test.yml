@@ -1,0 +1,49 @@
+version: 1.0
+feature_extractors:
+  - all_of:
+      - static_tags:
+          work_kind: US
+      - one_of:
+          - all_of:
+              - name_re: "(?P<us_id>(DPAIN|DPADEVOPS|DPAP|DPAEP|DPADG)-\\d+)"
+                process_name_re: "^(?P<program>.*)$"
+                hostname_re: "^(?P<hostname>.*)$"
+  - all_of:
+      - static_tags:
+          work_kind: Calls
+      - one_of:
+          - all_of:
+              - name_re: "^(?P<topic>.*) \\|"
+                process_name_re: "(?P<program>teams)"
+                hostname_re: "^(?P<hostname>.*)$"
+  - all_of:
+      - static_tags:
+          work_kind: Chat
+      - one_of:
+          - all_of:
+              - name_re: "^Slack \\| (!)?\\s*(?P<topic>.*?) \\|"
+                process_name_re: "(?P<program>slack)"
+                hostname_re: "^(?P<hostname>.*)$"
+  - all_of:
+      - static_tags:
+          work_kind: Browser
+      - one_of:
+          - all_of:
+              - process_name_re: "(?P<program>chrome)"
+                url_re: "^((http[s]?|ftp):\\\/)?\\\/?(?P<url>[^:\\\/\\s]+)((\\\/\\w+)*\\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$"
+                hostname_re: "^(?P<hostname>.*)$"
+  - all_of:
+      - static_tags:
+          work_kind: Other
+      - one_of:
+          - all_of:
+              - process_name_re: "^(?P<program>.*)$"
+                hostname_re: "^(?P<hostname>.*)$"
+group_by_order:
+  - hostname
+  - work_kind
+  - us_id
+  - topic
+  - url
+  - program
+

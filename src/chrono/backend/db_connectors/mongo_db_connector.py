@@ -1,6 +1,5 @@
 from copy import deepcopy
 from datetime import datetime
-from pprint import pprint
 from typing import Iterable, Optional
 
 import pymongo
@@ -35,7 +34,7 @@ class MongoDbConnector(DbConnector):
             res = self._collection.find_one({"_id": insert_id})
         else:
             self._collection.update_one({"_id": ObjectId(windows_state.id)},
-                                              {"$set": windows_state.dict(exclude={"id"})})
+                                        {"$set": windows_state.dict(exclude={"id"})})
             res = self._collection.find_one({"_id": ObjectId(windows_state.id)})
         res = self.id_to_str(res)
         return WindowsState(**res)
@@ -86,7 +85,5 @@ class MongoDbConnector(DbConnector):
         self.add_re_filter(filter, "active_window.project", activity_filter.project_re)
         self.add_re_filter(filter, "active_window.branch", activity_filter.branch_re)
         self.add_re_filter(filter, "active_window.file", activity_filter.file_re)
-
-        pprint(filter)
 
         return self.apply_filter(filter)
