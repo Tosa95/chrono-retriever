@@ -81,8 +81,8 @@ def group_by_features(windows_states: List[WindowsStatesWFeatures], group_by: Li
     )
 
 
-@query.field("aggregation")
-def resolve_aggregation(obj, info, from_timestamp: datetime, to_timestamp: datetime, feature_extractor: str):
+@query.field("aggregate")
+def resolve_aggregate(obj, info, from_timestamp: datetime, to_timestamp: datetime, feature_extractor: str):
     db_connector = get_db_connector()
 
     with open(os.path.join(DATA_FOLDER, feature_extractor), "rt") as f:
