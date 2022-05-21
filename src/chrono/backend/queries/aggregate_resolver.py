@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from importlib.abc import Loader
+from yaml import Loader
 from typing import Optional, List, Dict, Any
 
 import yaml
@@ -85,7 +85,7 @@ def group_by_features(windows_states: List[WindowsStatesWFeatures], group_by: Li
 def resolve_aggregate(obj, info, from_timestamp: datetime, to_timestamp: datetime, feature_extractor: str):
     db_connector = get_db_connector()
 
-    with open(os.path.join(DATA_FOLDER, feature_extractor), "rt") as f:
+    with open(os.path.join(DATA_FOLDER, feature_extractor) + ".yml", "rt") as f:
         fed = FeatureExtractorDescriptors(**yaml.load(f, Loader))
         fe = build_feature_extractor(fed)
 
